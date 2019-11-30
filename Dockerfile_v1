@@ -37,7 +37,7 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && /usr/sbin/update-locale LANG=en_US.UTF-8
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y --no-install-recommends \
+  && BUILDDEPS="curl \
 	curl \
 	libbz2-dev \
 	libcairo2-dev \
@@ -65,8 +65,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	xauth \
 	xfonts-base \
 	xvfb \
-	zlib1g-dev
-
+	zlib1g-dev" \
+  && apt-get install -y --no-install-recommends $BUILDDEPS
 RUN cd tmp/ \
   ## Download source code
   && svn co https://svn.r-project.org/R/trunk R-devel \
@@ -127,3 +127,23 @@ RUN cd tmp/ \
   && apt-get remove --purge -y $BUILDDEPS \
   && apt-get autoremove -y \
   && apt-get autoclean -y
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    file \
+    git \
+    libapparmor1 \
+    libssl1.0-dev \
+    unixodbc-dev \
+    libxml2-dev \
+    gdebi-core \
+    libcurl-openssl1.0-dev \
+    lsb-release \
+    psmisc \
+    python-setuptools \
+    sudo \
+    wget \
+    libclang-dev \
+    libobjc-6-dev \
+    libobjc4 \
+    libgc1c2
