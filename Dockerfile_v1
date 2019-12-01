@@ -61,6 +61,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	libxt-dev \
 	xvfb \
 	tcl8.6-dev
+
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && locale-gen en_US.utf8 \
   && /usr/sbin/update-locale LANG=en_US.UTF-8
@@ -73,7 +74,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	libicu-dev \
 	subversion \
 	tk8.6-dev \
-	texinfo" \
+	texinfo \
+        texlive-extra-utils \
+        texlive-fonts-recommended \
+        texlive-fonts-extra \
+        texlive-latex-recommended" \
   && apt-get install -y --no-install-recommends $BUILDDEPS \
   && cd tmp/ \
   ## Download source code
@@ -99,10 +104,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   ./configure --enable-R-shlib \
            	--enable-memory-profiling \
            	--with-readline \
-           	--with-blas \
            	--with-tcltk \
            	--disable-nls \
-           	--with-recommended-packages \
   ## Build and install
   && make \
   && make install \
@@ -135,4 +138,5 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get remove --purge -y $BUILDDEPS \
   && apt-get autoremove -y \
   && apt-get autoclean -y
+
 RUN apt-get update
