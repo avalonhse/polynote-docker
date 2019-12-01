@@ -32,39 +32,48 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	unzip \
 	zip \
 	zlib1g \
-	openjdk-11-jdk  
+	openjdk-11-jdk \
+	file \
+	git \
+	libapparmor1 \
+	lsb-release \
+	psmisc \
+	libssl-dev  \
+	python-setuptools \
+	sudo \
+	wget \
+	libobjc-6-dev \
+	libobjc4 \
+	libgc1c2 \
+	rsync \
+	libbz2-dev \
+	libpng-dev \
+	libreadline-dev \
+	libtiff5-dev \
+	liblzma-dev \
+	libjpeg-dev \
+	libpcre3-dev \
+	x11proto-core-dev \
+	xauth \
+	xfonts-base \
+	zlib1g-dev \
+	libx11-dev \
+	libxt-dev \
+	xvfb \
+	tcl8.6-dev
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && locale-gen en_US.utf8 \
   && /usr/sbin/update-locale LANG=en_US.UTF-8
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
   && BUILDDEPS="curl \
-	libbz2-dev \
 	libcairo2-dev \
 	libcurl4-openssl-dev \
 	libpango1.0-dev \
-	libjpeg-dev \
 	libicu-dev \
-	libpcre3-dev \
-	libpng-dev \
-	libreadline-dev \
-	libtiff5-dev \
-	liblzma-dev \
-	libx11-dev \
-	libxt-dev \
-	rsync \
-	subversion tcl8.6-dev \
+	subversion \
 	tk8.6-dev \
-	texinfo \
-	texlive-extra-utils \
-	texlive-fonts-recommended \
-	texlive-fonts-extra \
-	texlive-latex-recommended \
-	x11proto-core-dev \
-	xauth \
-	xfonts-base \
-	xvfb \
-	zlib1g-dev" \
+	texinfo" \
   && apt-get install -y --no-install-recommends $BUILDDEPS \
   && cd tmp/ \
   ## Download source code
@@ -75,25 +84,25 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && ./tools/rsync-recommended \
   ## Set compiler flags
   && R_PAPERSIZE=letter \
-    R_BATCHSAVE="--no-save --no-restore" \
-    R_BROWSER=xdg-open \
-    PAGER=/usr/bin/pager \
-    PERL=/usr/bin/perl \
-    R_UNZIPCMD=/usr/bin/unzip \
-    R_ZIPCMD=/usr/bin/zip \
-    R_PRINTCMD=/usr/bin/lpr \
-    LIBnn=lib \
-    AWK=/usr/bin/awk \
-    CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g" \
-    CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g" \
+	R_BATCHSAVE="--no-save --no-restore" \
+	R_BROWSER=xdg-open \
+	PAGER=/usr/bin/pager \
+	PERL=/usr/bin/perl \
+	R_UNZIPCMD=/usr/bin/unzip \
+	R_ZIPCMD=/usr/bin/zip \
+	R_PRINTCMD=/usr/bin/lpr \
+	LIBnn=lib \
+	AWK=/usr/bin/awk \
+	CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g" \
+	CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g" \
   ## Configure options
   ./configure --enable-R-shlib \
-               --enable-memory-profiling \
-               --with-readline \
-               --with-blas \
-               --with-tcltk \
-               --disable-nls \
-               --with-recommended-packages \
+           	--enable-memory-profiling \
+           	--with-readline \
+           	--with-blas \
+           	--with-tcltk \
+           	--disable-nls \
+           	--with-recommended-packages \
   ## Build and install
   && make \
   && make install \
@@ -126,4 +135,4 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get remove --purge -y $BUILDDEPS \
   && apt-get autoremove -y \
   && apt-get autoclean -y
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update
