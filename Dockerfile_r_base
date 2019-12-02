@@ -139,19 +139,4 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get remove --purge -y $BUILDDEPS \
   && apt-get autoremove -y \
   && apt-get autoclean -y
-
-ARG S6_VERSION
-ARG PANDOC_TEMPLATES_VERSION
-ENV S6_VERSION=${S6_VERSION:-v1.21.7.0}
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
-ENV PATH=/usr/lib/rstudio-server/bin:$PATH
-ENV PANDOC_TEMPLATES_VERSION=${PANDOC_TEMPLATES_VERSION:-2.6}
-
-RUN apt-get clean
-RUN export DEBIAN_FRONTEND=noninteractive \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends gdebi-core vim \
-  && wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.2.5019-amd64.deb \
-  && gdebi -n rstudio-server-1.2.5019-amd64.deb \
-
 RUN apt-get update
