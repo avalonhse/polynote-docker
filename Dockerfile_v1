@@ -60,6 +60,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     libx11-dev \
     libxt-dev \
     xvfb \
+    libcairo2-dev \
     tcl8.6-dev
 RUN apt-get update
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -68,7 +69,6 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
   && BUILDDEPS="curl \
-    libcairo2-dev \
     libcurl4-openssl-dev \
     libpango1.0-dev \
     subversion \
@@ -133,6 +133,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   ## TEMPORARY WORKAROUND to get more robust error handling for install2.r prior to littler update
   && curl -O /usr/local/bin/install2.r https://github.com/eddelbuettel/littler/raw/master/inst/examples/install2.r \
   && chmod +x /usr/local/bin/install2.r \
+  && echo "JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'" >> /etc/environment \
+  && /bin/bash -c "source /etc/environment" \ \
+  && echo "JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'" >> /usr/local/lib/R/etc/Renviron \
+  && R CMD javareconf \
+  && install2.r --error \
+    --deps TRUE \
+    rJava \
   ## Clean up from R source install
   && cd / \
   && rm -rf /tmp/* \
